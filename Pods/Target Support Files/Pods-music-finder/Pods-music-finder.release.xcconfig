@@ -1,0 +1,7 @@
+GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
+HEADER_SEARCH_PATHS = "${PODS_ROOT}/Headers/Public" "${PODS_ROOT}/Headers/Public/AFNetworking" "${PODS_ROOT}/Headers/Public/Mixpanel" "${PODS_ROOT}/Headers/Public/youtube-ios-player-helper"
+LIBRARY_SEARCH_PATHS = "$(PODS_ROOT)/Mixpanel/Mixpanel"
+OTHER_CFLAGS = $(inherited) -isystem "${PODS_ROOT}/Headers/Public" -isystem "${PODS_ROOT}/Headers/Public/AFNetworking" -isystem "${PODS_ROOT}/Headers/Public/Mixpanel" -isystem "${PODS_ROOT}/Headers/Public/youtube-ios-player-helper"
+OTHER_LDFLAGS = -ObjC -l"MPCategoryHelpers" -l"Pods-music-finder-AFNetworking" -l"Pods-music-finder-Mixpanel" -l"Pods-music-finder-youtube-ios-player-helper" -l"icucore" -framework "Accelerate" -framework "CoreGraphics" -framework "CoreTelephony" -framework "Foundation" -framework "MobileCoreServices" -framework "QuartzCore" -framework "Security" -framework "SystemConfiguration" -framework "UIKit"
+OTHER_LIBTOOLFLAGS = $(OTHER_LDFLAGS)
+PODS_ROOT = ${SRCROOT}/Pods

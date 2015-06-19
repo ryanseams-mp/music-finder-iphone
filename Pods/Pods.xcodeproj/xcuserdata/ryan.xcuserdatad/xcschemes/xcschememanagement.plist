@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>SchemeUserState</key>
+	<dict>
+		<key>Pods-music-finder WatchKit Extension-Mixpanel.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+			<key>orderHint</key>
+			<integer>4</integer>
+		</dict>
+		<key>Pods-music-finder WatchKit Extension.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+			<key>orderHint</key>
+			<integer>3</integer>
+		</dict>
+		<key>Pods-music-finder-AFNetworking.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+			<key>orderHint</key>
+			<integer>5</integer>
+		</dict>
+		<key>Pods-music-finder-Mixpanel.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+			<key>orderHint</key>
+			<integer>6</integer>
+		</dict>
+		<key>Pods-music-finder-youtube-ios-player-helper.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+			<key>orderHint</key>
+			<integer>7</integer>
+		</dict>
+		<key>Pods-music-finder.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+			<key>orderHint</key>
+			<integer>2</integer>
+		</dict>
+	</dict>
+	<key>SuppressBuildableAutocreation</key>
+	<dict>
+		<key>19C208D2E6CE1FDDEED72EA9</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>2FA56819FAB9D658DFF5E31E</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>3989DBC8B771EC4F863D3A7A</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>4D72CFD62AA5DCE554087472</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>4DF0BD6C3F4D4452FCE9A112</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>D36B290D1176970273801E23</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+	</dict>
+</dict>
+</plist>

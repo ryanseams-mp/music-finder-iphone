@@ -1,0 +1,5 @@
+#include "Pods-music-finder WatchKit Extension-Mixpanel.xcconfig"
+GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1 ${PODS_MUSIC_FINDER_WATCHKIT_EXTENSION_MIXPANEL_GCC_PREPROCESSOR_DEFINITIONS}
+HEADER_SEARCH_PATHS = "${PODS_ROOT}/Headers/Build" "${PODS_ROOT}/Headers/Build/Mixpanel" "${PODS_ROOT}/Headers/Public" "${PODS_ROOT}/Headers/Public/AFNetworking" "${PODS_ROOT}/Headers/Public/Mixpanel" "${PODS_ROOT}/Headers/Public/youtube-ios-player-helper"
+OTHER_LDFLAGS = ${PODS_MUSIC_FINDER_WATCHKIT_EXTENSION_MIXPANEL_OTHER_LDFLAGS} -ObjC
+PODS_ROOT = ${SRCROOT}
