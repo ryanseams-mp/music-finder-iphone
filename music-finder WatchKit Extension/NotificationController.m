@@ -36,6 +36,8 @@
     [super didDeactivate];
 }
 
+// Use the below for custom notification handling; otherwise notifications will display by default when phone is locked in standard watch layout
+
 /*
 - (void)didReceiveLocalNotification:(UILocalNotification *)localNotification withCompletion:(void (^)(WKUserNotificationInterfaceType))completionHandler {
     // This method is called when a local notification needs to be presented.
@@ -59,6 +61,3 @@
 
 
 @end
-
-
-

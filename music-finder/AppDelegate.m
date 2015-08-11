@@ -12,60 +12,37 @@
 
 @interface AppDelegate ()
 
-
-
 @end
 
 @implementation AppDelegate
 
-
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    
+
+// Set your Mixpanel token as variable MIXPANEL_TOKEN -- you must change this to your Mixpanel project token
 #define MIXPANEL_TOKEN @"ryanios"
     
-    // Initialize the library with your
-    // Mixpanel project token, MIXPANEL_TOKEN
+    // Initialize the library with your Mixpanel project token, MIXPANEL_TOKEN
     [Mixpanel sharedInstanceWithToken:MIXPANEL_TOKEN];
     
-    // Later, you can get your instance with
+    // Once initialized, you can get your instance with
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
     
-    [mixpanel registerSuperPropertiesOnce:@{@"PROP_NAME": @0}];
-    NSNumber *current = [[mixpanel currentSuperProperties] objectForKey:@"PROP_NAME"];
-    NSInteger *value = [current integerValue] + 1;
-    current = [NSNumber numberWithInteger:value];
-    [mixpanel registerSuperProperties:@{@"PROP_NAME": current}];
-    
-    [mixpanel track:@"Viewed Screen" properties:@{@"Screen": @"Home", @"Test": @"True", @"Image": @"iPod", @"Color":@"Blue", @"Distinct Id":mixpanel.distinctId}];
-    
-    [mixpanel registerSuperProperties:@{@"$app_release": [[NSBundle mainBundle] infoDictionary][@"CFBundleVersion"], @"$app_version": [[NSBundle mainBundle] infoDictionary][@"CFBundleShortVersionString"]}];
-    
-    NSLog(@"TESTING");
-    
-    // Let's now identify the user
-    [mixpanel identify:mixpanel.distinctId];
-    [mixpanel.people increment:@{@"Logins": @1}];
-    if( MPTweakValue(@"show alternate view", NO) ) {
-        NSLog(@"NO");
-    } else {
-        NSLog(@"YES");
-    }
-    
-    int numLives = MPTweakValue(@"number of lives", 5);
+    // Grab A/B testing Tweak variables and register as super properties
+    int numLives = MPTweakValue(@"Number of lives", 5);
     NSLog(@(numLives).stringValue);
+    [mixpanel registerSuperProperties:@{@"Num Lives": @(numLives).stringValue}];
     
-    BOOL showQuickStartMenu = MPTweakValue(@"showQuickStartMenu", NO);
-    if (showQuickStartMenu) {
-        NSLog(@"Tweak enabled");
-    }
+    int numLives1 = MPTweakValue(@"Number of lives 1", 20);
+    NSLog(@(numLives1).stringValue);
+    [mixpanel registerSuperProperties:@{@"Num Lives 1": @(numLives1).stringValue}];
     
-    /*increment super props
-     [mixpanel registerSuperPropertiesOnce:@{@"PROP_NAME": 0}];
-     NSNumber *current = [[mixpanel currentSuperProperties] objectForKey:@"PROP_NAME"];
-     NSInteger *value = [current integerValue] + 1;
-     current = [NSNumber numberWithInteger:value];
-     [mixpanel registerSuperProperties:@{@"PROP_NAME": current}];*/
+    // Ensure Mixpanel looks for new A/B testing experiments and joins then when available
+    mixpanel.checkForVariantsOnActive = true;
+    [mixpanel joinExperimentsWithCallback:^{
+        // Here you can use tweaks to do UX mods like control the next view, sequence of views, etc.
+    }];
     
+    // Add code to handle registering for push notifications to Mixpanel, need different code for post and pre iOS 8
 #if __IPHONE_OS_VERSION_MIN_REQUIRED >= 80000
     UIUserNotificationSettings *userNotificationSettings = [UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeBadge | UIUserNotificationTypeSound | UIUserNotificationTypeAlert) categories:nil];
     [[UIApplication sharedApplication] registerUserNotificationSettings:userNotificationSettings];
@@ -80,10 +57,10 @@
     [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
 #endif
     
-    // Override point for customization after application launch.
     return YES;
 }
 
+// Code for handling deep linking from Mixpanel notifications
 #pragma mark - Deep linking
 
 -(BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
@@ -95,6 +72,7 @@
     return YES;
 }
 
+// Code for handling registering push token to Mixpanel after user agress
 #pragma mark - Push notifications
 
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000
@@ -157,40 +135,54 @@
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {
-    // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
-    // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
+    
 }
 
+
 - (void)applicationDidEnterBackground:(UIApplication *)application {
-    // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
-    // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+    [Mixpanel sharedInstanceWithToken:MIXPANEL_TOKEN];
+    Mixpanel *mixpanel = [Mixpanel sharedInstance];
+    
+    // Track the session timings as the app goes to the background
+    [mixpanel track:@"$app_open"];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
-    // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
+    
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
-    // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+    [Mixpanel sharedInstanceWithToken:MIXPANEL_TOKEN];
+    Mixpanel *mixpanel = [Mixpanel sharedInstance];
+    
+    // Start session timings on each app open
+    [mixpanel timeEvent:@"$app_open"];
+    
+    // Track an incremental super property for number of app opens
+    [mixpanel registerSuperPropertiesOnce:@{@"App Opens": @1}];
+    NSNumber *current = [[mixpanel currentSuperProperties] objectForKey:@"App Opens"];
+    NSInteger *value = [current integerValue] + 1;
+    current = [NSNumber numberWithInteger:value];
+    [mixpanel registerSuperProperties:@{@"App Opens": current}];
+    
+    // Track a people property for number of app opens -- identify is required to send updates to Mixpanel
+    [mixpanel identify:mixpanel.distinctId];
+    [mixpanel.people increment:@{@"App Opens": @1}];
+    
+    // Set a super property to indicate this is now a returning user
+    [mixpanel registerSuperProperties:@{@"Returning User": @"true"}];
+    
+    // Track an event for the user landing on the Home screen
+    [mixpanel track:@"Viewed Screen" properties:@{@"Screen": @"Home", @"Test": @"True", @"Image": @"iPod", @"Color":@"Blue", @"Distinct Id":mixpanel.distinctId}];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {
-    // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+    
 }
 
 - (void)application:(UIApplication *)application handleWatchKitExtensionRequest:(NSDictionary *)userInfo reply:(void (^)(NSDictionary *))reply
 {
-    // Temporary fix, I hope.
-    // --------------------
-    __block UIBackgroundTaskIdentifier bogusWorkaroundTask;
-    bogusWorkaroundTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
-        [[UIApplication sharedApplication] endBackgroundTask:bogusWorkaroundTask];
-    }];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [[UIApplication sharedApplication] endBackgroundTask:bogusWorkaroundTask];
-    });
-    // --------------------
-    
+    // Start the background task started to process watch data
     __block UIBackgroundTaskIdentifier realBackgroundTask;
     realBackgroundTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
         reply(nil);
@@ -198,66 +190,14 @@
     }];
     
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
+    
+    // Retrieve the new distinct id from the watch and then apply it to Mixpanel
     NSString *uuid = userInfo[@"NewID"];
     [mixpanel identify:uuid];
     
+    // End the background task started to process watch data
     reply(nil);
     [[UIApplication sharedApplication] endBackgroundTask:realBackgroundTask];
 }
-
-
-/*OLD CODE FOR RECEIVING DATA FROM WATCH THEN SENDING TO MIXPANEL
- 
- DATA SEND WAS ON THE ACTION BELOW TO QUEUE TO THE WATCH:
- - (IBAction)peopleButton {
- 
- NSDictionary *applicationData = @{@"Type": @"People", @"$device": @"Apple Watch", @"Test": @"True"};
- 
- [WKInterfaceController openParentApplication:applicationData reply:^(NSDictionary *replyInfo, NSError *error) {}];
- 
- }
- 
- THEN THIS CODE BELOW IS RUN TO ACTUALLY SEND DATA:
-- (void)application:(UIApplication *)application handleWatchKitExtensionRequest:(NSDictionary *)userInfo reply:(void (^)(NSDictionary *))reply
-{
-    // Temporary fix, I hope.
-    // --------------------
-    __block UIBackgroundTaskIdentifier bogusWorkaroundTask;
-    bogusWorkaroundTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
-        [[UIApplication sharedApplication] endBackgroundTask:bogusWorkaroundTask];
-    }];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [[UIApplication sharedApplication] endBackgroundTask:bogusWorkaroundTask];
-    });
-    // --------------------
-    
-    __block UIBackgroundTaskIdentifier realBackgroundTask;
-    realBackgroundTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
-        reply(nil);
-        [[UIApplication sharedApplication] endBackgroundTask:realBackgroundTask];
-    }];
-    
-    Mixpanel *mixpanel = [Mixpanel sharedInstance];
-    NSString *typeString = userInfo[@"Type"];
-    
-    NSLog(typeString);
-    if([typeString isEqualToString:@"Event"]) {
-        NSString *categoryString = userInfo[@"Event"];
-        [mixpanel track:categoryString properties:userInfo];
-    }
-    if([typeString isEqualToString:@"People"]) {
-        [mixpanel identify:mixpanel.distinctId];
-        [mixpanel.people set:userInfo];
-    }
-    if([typeString isEqualToString:@"Reset"]) {
-        NSString *uuid = [[NSUUID UUID] UUIDString];
-        [mixpanel identify:uuid];
-        [mixpanel track:@"Watch Reset" properties:userInfo];
-    }
-    
-    reply(nil);
-    [[UIApplication sharedApplication] endBackgroundTask:realBackgroundTask];
-}*/
-
 
 @end

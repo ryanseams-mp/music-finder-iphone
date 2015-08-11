@@ -10,5 +10,5 @@
 #define COCOAPODS_POD_AVAILABLE_Mixpanel_AppExtension
 #define COCOAPODS_VERSION_MAJOR_Mixpanel_AppExtension 2
 #define COCOAPODS_VERSION_MINOR_Mixpanel_AppExtension 8
-#define COCOAPODS_VERSION_PATCH_Mixpanel_AppExtension 1
+#define COCOAPODS_VERSION_PATCH_Mixpanel_AppExtension 2
 

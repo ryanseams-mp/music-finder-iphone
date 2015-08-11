@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "3989DBC8B771EC4F863D3A7A"
+               BlueprintIdentifier = "AD38219316DF96EEB7509BA3"
                BuildableName = "libPods-music-finder WatchKit Extension.a"
                BlueprintName = "Pods-music-finder WatchKit Extension"
                ReferencedContainer = "container:Pods.xcodeproj">

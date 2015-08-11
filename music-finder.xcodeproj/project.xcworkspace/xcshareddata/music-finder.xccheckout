@@ -5,23 +5,23 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
-	<string>B5764813-B6F7-45F0-92BA-2EC1A9D47C04</string>
+	<string>6D05ED0D-E823-440C-A070-F26F8FF18A4F</string>
 	<key>IDESourceControlProjectName</key>
 	<string>music-finder</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>6498AF032C006F795CB5F83700E75B0C4F36C393</key>
-		<string>github.com:ryanseams-mp/music-finder.git</string>
+		<string>github.com:ryanseams-mp/music-finder-iphone.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>music-finder.xcworkspace</string>
+	<string>music-finder.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>6498AF032C006F795CB5F83700E75B0C4F36C393</key>
-		<string>..</string>
+		<string>../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>github.com:ryanseams-mp/music-finder.git</string>
+	<string>github.com:ryanseams-mp/music-finder-iphone.git</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>

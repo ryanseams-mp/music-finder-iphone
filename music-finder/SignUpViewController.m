@@ -28,16 +28,15 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
     
+    // Track event that the user landed on the Signup screen
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
     [mixpanel track:@"Viewed Screen" properties:@{@"Screen": @"Sign Up", @"Test": @"True", @"Distinct Id":mixpanel.distinctId}];
-    [mixpanel timeEvent:@"Profile Image Upload"];
     
-    // Initialize Data
+    // Initialize data for the genre picker wheel
     _pickerData = @[@"Country", @"Pop", @"Rap", @"Rock", @"Top 40"];
     
-    // Connect data
+    // Connect data from the outlets to the view
     self.picker.dataSource = self;
     self.picker.delegate = self;
     self.nameSignup.delegate = self;
@@ -48,22 +47,21 @@
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
-// The number of columns of data
+// The number of columns of data for the picker wheel
 - (int)numberOfComponentsInPickerView:(UIPickerView *)pickerView
 {
     return 1;
 }
 
-// The number of rows of data
+// The number of rows of data for the picker wheel
 - (int)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
 {
     return _pickerData.count;
 }
 
-// The data to return for the row and component (column) that's being passed in
+// The data to return for the row and component (column) for the picker wheel
 - (NSString*)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
 {
     return _pickerData[row];
@@ -77,7 +75,7 @@
     self.genreSignup = _pickerData[row];
 }
 
-//close the keyboard
+// Close the keyboard when the user is done typing and presses return
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     [textField resignFirstResponder];
@@ -85,10 +83,8 @@
     return YES;
 }
 
-
+// Prepare to send the genre to other views upon segue
 #pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     
     if ([segue.identifier isEqualToString:@"showRecipeDetail"]) {
@@ -98,24 +94,33 @@
         // Pass any objects to the view controller here, like...
         vc.genreSignup = self.genreSignup;
     }
-    
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
 }
 
 - (IBAction)submitSignup:(UIButton *)sender {
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
+    
+    // If the text fields have data, let's do some magic
     if(self.nameSignup.text.length!=0 && self.emailSignup.text.length!=0 && self.usernameSignup.text.length!=0 && self.passwordSignup.text.length!=0){
+        
+        // Since this is signup, we alias the user with a unique identifier, like username here
         [mixpanel createAlias:self.usernameSignup.text forDistinctID:mixpanel.distinctId];
+        
+        // After we alias, we need to identify the user to flush the people queue
         [mixpanel identify:self.usernameSignup.text];
+        
+        // Once we have the identity management in order, let's register some people and super properties for the user
         [mixpanel.people set:@{@"$name": self.nameSignup.text, @"$email": self.emailSignup.text, @"$username":self.usernameSignup.text, @"Password":self.passwordSignup.text, @"Alias": self.usernameSignup.text}];
         [mixpanel registerSuperProperties:@{@"Name": self.nameSignup.text, @"Email": self.emailSignup.text, @"Username":self.usernameSignup.text, @"Password":self.passwordSignup.text, @"Alias": self.usernameSignup.text}];
+        
+        // Track an event that the user successfully signed up for our app
         [mixpanel track:@"Signed Up" properties:@{@"Genre": self.genreSignup, @"Distinct Id":mixpanel.distinctId}];
     }
 }
 
 - (IBAction)backSignup:(UIButton *)sender {
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
+    
+    // Track an event that the user went backwards from the Signup screen
     [mixpanel track:@"Sign Up Back" properties:@{@"Name": self.nameSignup.text, @"Email": self.emailSignup.text, @"Username":self.usernameSignup.text, @"Password":self.passwordSignup.text, @"Alias": self.usernameSignup.text, @"Distinct Id":mixpanel.distinctId}];
 }
 

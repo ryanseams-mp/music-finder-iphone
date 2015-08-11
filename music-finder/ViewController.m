@@ -11,6 +11,7 @@
 #import <Mixpanel/MPTweakInline.h>
 
 @interface ViewController ()
+
 - (IBAction)loginButton:(UIButton *)sender;
 - (IBAction)signupButton:(UIButton *)sender;
 
@@ -20,23 +21,24 @@
 
 - (void)viewDidLoad {   
     [super viewDidLoad];
-    // Do any additional setup after loading the view, typically from a nib.
     
+    // Track event that the user landed on the Home screen
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
     [mixpanel track:@"Viewed Screen" properties:@{@"Screen": @"Home", @"Test": @"True", @"Image": @"iPod", @"Color":@"Blue", @"Distinct Id":mixpanel.distinctId}];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 - (IBAction)loginButton:(UIButton *)sender {
+    // Track event that the user clicked on the Login button
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
     [mixpanel track:@"Login Button Clicked" properties:@{@"Test": @"True", @"Image": @"iPod", @"Color":@"Blue", @"Distinct Id":mixpanel.distinctId}];
 }
 
 - (IBAction)signupButton:(UIButton *)sender {
+    // Track event that the user clicked on the Signup button
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
     [mixpanel track:@"Sign Up Button Clicked" properties:@{@"Test": @"True", @"Image": @"iPod", @"Color":@"Blue", @"Distinct Id":mixpanel.distinctId}];
 }

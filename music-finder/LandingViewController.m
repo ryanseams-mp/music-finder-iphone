@@ -12,6 +12,7 @@
 #import <YTPlayerView.h>
 
 @interface LandingViewController ()
+
 - (IBAction)signoutButton:(UIButton *)sender;
 @property (strong, nonatomic) IBOutlet YTPlayerView *playerView;
 
@@ -23,51 +24,37 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
-    
-    self.playerView.delegate = self;
     
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
+    
+    // Track event that the user landed on the Landing screen
     [mixpanel track:@"Viewed Screen" properties:@{@"Screen": @"Landing", @"Test": @"True", @"Distinct Id":mixpanel.distinctId}];
     
+    // Create the YouTube player and assign a video based on the genre chosen upon signup
+    self.playerView.delegate = self;
     NSString *videoId;
-    
     if ([self.genreSignup isEqual: @"Country"]) {
         videoId = @"WySgNm8qH-I";
-    }
-    else if ([self.genreSignup isEqual: @"Pop"]) {
+    } else if ([self.genreSignup isEqual: @"Pop"]) {
         videoId = @"JV2s0UIPOQY";
-    }
-    else if ([self.genreSignup isEqual: @"Rap"]) {
+    } else if ([self.genreSignup isEqual: @"Rap"]) {
         videoId = @"O8S-snMP4PM";
-    }
-    else if ([self.genreSignup isEqual: @"Rock"]) {
+    } else if ([self.genreSignup isEqual: @"Rock"]) {
         videoId = @"Vy1duFfHfb4";
-    }
-    else {
+    } else {
         videoId = @"kKnxcvNqrCo";
     }
-    
     [self.playerView loadWithVideoId:videoId];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 - (void)playerView:(YTPlayerView *)playerView didChangeToState:(YTPlayerState)state {
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
+    
+    // Track video play and stop events based on the user inputs on the YouTube object
     switch (state) {
         case kYTPlayerStatePlaying:
             [mixpanel track:@"Video Played" properties:@{@"Distinct Id":mixpanel.distinctId, @"Genre":self.genreSignup}];
@@ -81,9 +68,14 @@
 }
 
 - (IBAction)signoutButton:(UIButton *)sender {
-    //let's make this do a reset for testing sake?
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
+    
+    // Track that the user signed out and headed back to the Home screen
     [mixpanel track:@"Signed Out" properties:@{@"Distinct Id":mixpanel.distinctId}];
+    
+    // If many users utilize the same device, you may want to call
+    // [mixpanel reset];
+    // You will need to manually reset mixpanel.distinctId to a uuid in this scenario
 }
 
 @end

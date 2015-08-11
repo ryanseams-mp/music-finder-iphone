@@ -11,6 +11,7 @@
 #import <Mixpanel/MPTweakInline.h>
 
 @interface LoginViewController ()
+
 @property (strong, nonatomic) IBOutlet UITextField *usernameLogin;
 @property (strong, nonatomic) IBOutlet UITextField *passwordLogin;
 - (IBAction)submitLogin:(UIButton *)sender;
@@ -22,41 +23,40 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
     
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
+    
+     // Track event that the user landed on the Login screen
     [mixpanel track:@"Viewed Screen" properties:@{@"Screen": @"Login", @"Test": @"True", @"Distinct Id":mixpanel.distinctId}];
-    [mixpanel track:@"Profile Image Upload"];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 - (IBAction)submitLogin:(UIButton *)sender {
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
+    
+    // If the text fields have data, let's do some magic
     if(self.usernameLogin.text.length!=0 && self.passwordLogin.text.length!=0){
+        
+        // Since this is login, we identify the user with their aliased identifier
         [mixpanel identify:self.usernameLogin.text];
+        
+        // Once we have the identity management in order, let's set some people properties for the user
         [mixpanel.people set:@{@"$username":self.usernameLogin.text, @"Password":self.passwordLogin.text}];
-        [mixpanel track:@"Logged In" properties:@{@"Distinct Id":mixpanel.distinctId}];
         [mixpanel.people increment: @{@"Logins": @1}];
+        
+        // Track an event that the user successfully logged into our app
+        [mixpanel track:@"Logged In" properties:@{@"Distinct Id":mixpanel.distinctId}];
     }
 
 }
 
 - (IBAction)backLogin:(UIButton *)sender {
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
+    
+    // Track an event that the user went backwards from the Login screen
     [mixpanel track:@"Login Back" properties:@{@"Username":self.usernameLogin.text, @"Password":self.passwordLogin.text, @"Distinct Id":mixpanel.distinctId}];
 }
 
