@@ -22,7 +22,8 @@
 #define MIXPANEL_TOKEN @"ryanios"
     
     // Initialize the library with your Mixpanel project token, MIXPANEL_TOKEN
-    [Mixpanel sharedInstanceWithToken:MIXPANEL_TOKEN];
+    // Be sure to initialize with launchOptions if you wish to track push notification opens automatically
+    [Mixpanel sharedInstanceWithToken:MIXPANEL_TOKEN launchOptions:launchOptions];
     
     // Once initialized, you can get your instance with
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
@@ -130,6 +131,7 @@
     [alert show];
 #endif
     
+    // Track push notification opens recevied while the app is running
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
     [mixpanel trackPushNotification:userInfo];
 }
